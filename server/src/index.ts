@@ -1,8 +1,10 @@
 import express, { Express } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 import { connectDatabase } from './config/database';
 import authRoutes from './routes/auth';
+import resumeRoutes from './routes/resumes';
 
 // Load environment variables
 dotenv.config();
@@ -42,6 +44,9 @@ const fs9 = require('fs'); const logPath9 = 'c:\\Users\\user\\Desktop\\resume\\.
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
@@ -49,6 +54,7 @@ app.get('/health', (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/resumes', resumeRoutes);
 // #region agent log
 const fs10 = require('fs'); const logPath10 = 'c:\\Users\\user\\Desktop\\resume\\.cursor\\debug.log'; fs10.appendFileSync(logPath10, JSON.stringify({location:'index.ts:28',message:'Auth routes mounted',data:{path:'/api/auth'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})+'\n');
 // #endregion

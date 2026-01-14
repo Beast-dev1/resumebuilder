@@ -49,5 +49,40 @@ api.interceptors.response.use(
   }
 );
 
+// Resume API functions
+export const getResumes = async () => {
+  const response = await api.get('/api/resumes');
+  return response.data;
+};
+
+export const getResume = async (id: string) => {
+  const response = await api.get(`/api/resumes/${id}`);
+  return response.data;
+};
+
+export const createResume = async (data: { title: string; resumeData?: Record<string, any> }) => {
+  const response = await api.post('/api/resumes', data);
+  return response.data;
+};
+
+export const uploadResume = async (file: File, title?: string) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  if (title) {
+    formData.append('title', title);
+  }
+  const response = await api.post('/api/resumes/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
+
+export const deleteResume = async (id: string) => {
+  const response = await api.delete(`/api/resumes/${id}`);
+  return response.data;
+};
+
 export default api;
 

@@ -17,6 +17,22 @@ function Hero() {
     };
   }, [isMenuOpen]);
 
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    setIsMenuOpen(false); // Close mobile menu when navigating
+    const element = document.getElementById(targetId);
+    if (element) {
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
     <>
       <style>
@@ -40,17 +56,33 @@ function Hero() {
               isMenuOpen ? 'max-md:w-full' : 'max-md:w-0'
             }`}
           >
-            <a className="hover:text-green-600 transition" href="#templates">
-              Templates
+            <a
+              className="hover:text-green-600 transition cursor-pointer"
+              href="#hero"
+              onClick={(e) => handleSmoothScroll(e, 'hero')}
+            >
+              Home
             </a>
-            <a className="hover:text-green-600 transition" href="#features">
+            <a
+              className="hover:text-green-600 transition cursor-pointer"
+              href="#features"
+              onClick={(e) => handleSmoothScroll(e, 'features')}
+            >
               Features
             </a>
-            <a className="hover:text-green-600 transition" href="#pricing">
-              Pricing
+            <a
+              className="hover:text-green-600 transition cursor-pointer"
+              href="#testimonials"
+              onClick={(e) => handleSmoothScroll(e, 'testimonials')}
+            >
+              Testimonials
             </a>
-            <a className="hover:text-green-600 transition" href="#about">
-              About
+            <a
+              className="hover:text-green-600 transition cursor-pointer"
+              href="#footer"
+              onClick={(e) => handleSmoothScroll(e, 'footer')}
+            >
+              Contact
             </a>
             <button
               id="closeMenu"

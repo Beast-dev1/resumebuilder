@@ -17,7 +17,7 @@ function Footer() {
   };
 
   return (
-    <footer className="relative overflow-hidden px-6 md:px-16 lg:px-24 xl:px-32 w-full text-sm text-slate-500 bg-white pt-10">
+    <footer id="footer" className="relative overflow-hidden px-6 md:px-16 lg:px-24 xl:px-32 w-full text-sm text-slate-500 bg-white pt-10">
       <svg
         className="hidden md:block absolute -bottom-30 -left-80 opacity-5 w-full h-full pointer-events-none"
         width="68"

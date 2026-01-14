@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Logo from '../ui/Logo';
 
 function Hero() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,14 +25,14 @@ function Hero() {
         `}
       </style>
       <section
-        id="section"
+        id="hero"
         className={`bg-gradient-to-b px-3 sm:px-10 from-[#F0FDF4] via-[#FDFEFF] to-[#ECFDF5] pt-6 h-full ${
           isMenuOpen ? 'overflow-hidden' : ''
         }`}
       >
         <header className="flex items-center justify-between px-6 py-3 md:py-4 shadow-sm max-w-5xl rounded-full mx-auto w-full bg-white">
-          <a href="/" className="text-2xl font-bold text-green-600">
-            ResumeBuilder
+          <a href="/" className="flex items-center ">
+            <Logo />
           </a>
           <nav
             id="menu"

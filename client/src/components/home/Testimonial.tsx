@@ -72,7 +72,7 @@ export default function Testimonial({ testimonials = defaultTestimonials, animat
   );
 
   return (
-    <>
+    <section id="testimonials">
       <style>
         {`
           @keyframes marqueeScroll {
@@ -120,7 +120,7 @@ export default function Testimonial({ testimonials = defaultTestimonials, animat
         </div>
         <div className="absolute right-0 top-0 h-full w-20 md:w-40 z-10 pointer-events-none bg-gradient-to-l from-white to-transparent"></div>
       </div>
-    </>
+    </section>
   );
 }
 

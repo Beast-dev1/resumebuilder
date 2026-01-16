@@ -71,3 +71,5 @@ function ResumeCard({ id, title, updatedAt, fileType, onDelete, isDeleting }: Re
 
 export default ResumeCard;
 
+
+

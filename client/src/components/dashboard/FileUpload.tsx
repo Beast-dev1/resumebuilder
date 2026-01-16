@@ -3,9 +3,11 @@ import { useState, useRef, DragEvent, ChangeEvent } from 'react';
 interface FileUploadProps {
   onUpload: (file: File) => Promise<void>;
   isUploading?: boolean;
+  variant?: 'card' | 'button';
+  buttonLabel?: string;
 }
 
-function FileUpload({ onUpload, isUploading }: FileUploadProps) {
+function FileUpload({ onUpload, isUploading, variant = 'card', buttonLabel }: FileUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -90,53 +92,65 @@ function FileUpload({ onUpload, isUploading }: FileUploadProps) {
 
   return (
     <div className="w-full">
-      <div
-        onDragEnter={handleDragEnter}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        onClick={handleClick}
-        className={`
-          relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer
-          transition-all duration-200
-          ${isDragging 
-            ? 'border-purple-500 bg-purple-50' 
-            : 'border-gray-300 hover:border-purple-400 hover:bg-gray-50'
-          }
-          ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}
-        `}
-      >
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".pdf,.json,.doc,.docx"
-          onChange={handleFileInput}
-          className="hidden"
-          disabled={isUploading}
-        />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".pdf,.json,.doc,.docx"
+        onChange={handleFileInput}
+        className="hidden"
+        disabled={isUploading}
+      />
 
-        <div className="flex flex-col items-center gap-3">
-          <div className="text-5xl">
-            {isUploading ? '⏳' : isDragging ? '📤' : '📁'}
-          </div>
-          <div>
-            <p className="text-gray-700 font-medium">
-              {isUploading 
-                ? 'Uploading...' 
-                : isDragging 
-                ? 'Drop your file here' 
-                : 'Drag & drop your resume here'
-              }
-            </p>
-            <p className="text-sm text-gray-500 mt-1">
-              or <span className="text-purple-600 font-medium">click to browse</span>
-            </p>
-            <p className="text-xs text-gray-400 mt-2">
-              Supports PDF, JSON, DOC, DOCX (Max 10MB)
-            </p>
+      {variant === 'button' ? (
+        <button
+          type="button"
+          onClick={handleClick}
+          disabled={isUploading}
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-emerald-600 hover:to-green-600 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <span className="text-lg">{isUploading ? '⏳' : '📤'}</span>
+          <span>{isUploading ? 'Uploading...' : buttonLabel || 'Upload Resume'}</span>
+        </button>
+      ) : (
+        <div
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onClick={handleClick}
+          className={`
+            relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer
+            transition-all duration-200
+            ${isDragging 
+              ? 'border-purple-500 bg-purple-50' 
+              : 'border-gray-300 hover:border-purple-400 hover:bg-gray-50'
+            }
+            ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}
+          `}
+        >
+          <div className="flex flex-col items-center gap-3">
+            <div className="text-5xl">
+              {isUploading ? '⏳' : isDragging ? '📤' : '📁'}
+            </div>
+            <div>
+              <p className="text-gray-700 font-medium">
+                {isUploading 
+                  ? 'Uploading...' 
+                  : isDragging 
+                  ? 'Drop your file here' 
+                  : 'Drag & drop your resume here'
+                }
+              </p>
+              <p className="text-sm text-gray-500 mt-1">
+                or <span className="text-purple-600 font-medium">click to browse</span>
+              </p>
+              <p className="text-xs text-gray-400 mt-2">
+                Supports PDF, JSON, DOC, DOCX (Max 10MB)
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {error && (
         <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
@@ -148,4 +162,5 @@ function FileUpload({ onUpload, isUploading }: FileUploadProps) {
 }
 
 export default FileUpload;
+
 

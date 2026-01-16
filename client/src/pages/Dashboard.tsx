@@ -3,7 +3,8 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { getResumes, uploadResume, deleteResume } from '../utils/api';
 import ResumeCard from '../components/dashboard/ResumeCard';
 import FileUpload from '../components/dashboard/FileUpload';
-import { removeToken } from '../utils/auth';
+import Header from '../components/ui/Header';
+import { getToken, removeToken } from '../utils/auth';
 
 interface Resume {
   _id: string;
@@ -93,6 +94,30 @@ function Dashboard() {
     const daysSinceUpdate = (Date.now() - new Date(r.updatedAt).getTime()) / (1000 * 60 * 60 * 24);
     return daysSinceUpdate <= 7;
   }).length;
+  const getUsernameFromToken = (): string => {
+    const token = getToken();
+    if (!token) return 'User';
+    const parts = token.split('.');
+    if (parts.length < 2) return 'User';
+
+    try {
+      const normalized = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const padding = normalized.length % 4 ? '='.repeat(4 - (normalized.length % 4)) : '';
+      const decoded = atob(normalized + padding);
+      const payload = JSON.parse(decoded);
+      const rawName =
+        payload?.name ||
+        payload?.username ||
+        payload?.user?.name ||
+        payload?.email ||
+        payload?.user?.email;
+      if (typeof rawName !== 'string' || rawName.length === 0) return 'User';
+      return rawName.includes('@') ? rawName.split('@')[0] : rawName;
+    } catch {
+      return 'User';
+    }
+  };
+  const username = getUsernameFromToken();
 
   return (
     <>
@@ -101,61 +126,18 @@ function Dashboard() {
           @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
         `}
       </style>
-      <div className="min-h-screen bg-gradient-to-br from-[#F0FDF4] via-[#FDFEFF] to-[#ECFDF5] p-4 md:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Enhanced Header with Stats */}
-          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-white/20 p-6 md:p-8 mb-6 transition-all duration-500">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
-                    <span className="text-2xl">📊</span>
-                  </div>
-                  <div>
-                    <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-                      Dashboard
-                    </h1>
-                    <p className="text-gray-600 mt-1 text-sm md:text-base">Manage and organize your resumes</p>
-                  </div>
-                </div>
-                
-                {/* Quick Stats */}
-                {!isLoading && (
-                  <div className="flex flex-wrap gap-4 mt-4">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 rounded-lg border border-purple-100">
-                      <span className="text-purple-600 font-semibold">{totalResumes}</span>
-                      <span className="text-gray-600 text-sm">Total Resumes</span>
-                    </div>
-                    {recentResumes > 0 && (
-                      <div className="flex items-center gap-2 px-4 py-2 bg-green-50 rounded-lg border border-green-100">
-                        <span className="text-green-600 font-semibold">{recentResumes}</span>
-                        <span className="text-gray-600 text-sm">Updated This Week</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <Link
-                  to="/"
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 text-sm font-medium transition-all duration-200 hover:bg-gray-100 rounded-lg"
-                >
-                  ← Home
-                </Link>
-                <button
-                  onClick={() => {
-                    removeToken();
-                    navigate({ to: '/login' });
-                  }}
-                  className="px-5 py-2.5 text-gray-700 hover:text-gray-900 text-sm font-medium transition-all duration-200 hover:bg-gray-100 rounded-lg border border-gray-200 hover:border-gray-300"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50">
+        <Header
+          username={username}
+          recentResumes={recentResumes}
+          isLoading={isLoading}
+          onLogout={() => {
+            removeToken();
+            navigate({ to: '/login' });
+          }}
+        />
 
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
           {/* Enhanced Error Message */}
           {error && (
             <div className="bg-gradient-to-r from-red-50 to-red-50/50 border-l-4 border-red-500 text-red-700 px-5 py-4 rounded-xl mb-6 shadow-md transition-all duration-300 flex items-center gap-3 animate-pulse">
@@ -173,9 +155,9 @@ function Dashboard() {
           {/* Action Cards Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             {/* Create Resume Card */}
-            <div className="bg-gradient-to-br from-white to-purple-50/30 rounded-3xl shadow-xl border border-purple-100/50 p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+            <div className="bg-gradient-to-br from-white to-emerald-50/40 rounded-3xl shadow-xl border border-emerald-100/50 p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg flex-shrink-0">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center shadow-lg flex-shrink-0">
                   <span className="text-3xl">✨</span>
                 </div>
                 <div className="flex-1">
@@ -183,7 +165,7 @@ function Dashboard() {
                   <p className="text-gray-600 mb-4">Build a professional resume from scratch using our intuitive builder</p>
                   <Link
                     to="/builder"
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-emerald-600 hover:to-green-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                   >
                     <span>Create Resume</span>
                     <span>→</span>
@@ -193,36 +175,29 @@ function Dashboard() {
             </div>
 
             {/* Upload Resume Card */}
-            <div className="bg-gradient-to-br from-white to-blue-50/30 rounded-3xl shadow-xl border border-blue-100/50 p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+            <div className="bg-gradient-to-br from-white to-emerald-50/40 rounded-3xl shadow-xl border border-emerald-100/50 p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg flex-shrink-0">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center shadow-lg flex-shrink-0">
                   <span className="text-3xl">📤</span>
                 </div>
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-gray-800 mb-2">Upload Existing</h2>
-                  <p className="text-gray-600 mb-4">Upload your existing resume file to get started quickly</p>
-                  <div className="text-xs text-gray-500 bg-blue-50 px-3 py-1.5 rounded-lg inline-block">
-                    Supports PDF, JSON, DOC, DOCX
-                  </div>
+                  <p className="text-gray-600 ">Upload your existing resume file to get started quickly</p>
+                  <p className="text-gray-600 text-sm mb-4">Supported formats: PDF, DOCX, DOC Max 10MB</p>
+                  <FileUpload
+                    onUpload={handleFileUpload}
+                    isUploading={isUploading}
+                    variant="button"
+                    buttonLabel="Upload Resume"
+
+                  />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Upload Section */}
-          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-white/20 p-8 mb-6 transition-all duration-500">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-                <span className="text-2xl">📁</span>
-                Upload Resume File
-              </h2>
-              <p className="text-gray-600">Drag and drop your file or click to browse</p>
-            </div>
-            <FileUpload onUpload={handleFileUpload} isUploading={isUploading} />
-          </div>
-
           {/* Your Resumes Section */}
-          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-white/20 p-8 transition-all duration-500">
+          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-emerald-100/40 p-8 transition-all duration-500">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
@@ -250,13 +225,13 @@ function Dashboard() {
             
             {isLoading ? (
               <div className="text-center py-16">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-200 border-t-purple-500 mb-4"></div>
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-emerald-200 border-t-emerald-500 mb-4"></div>
                 <p className="text-gray-600 font-medium">Loading your resumes...</p>
                 <p className="text-gray-500 text-sm mt-2">Please wait a moment</p>
               </div>
             ) : resumes.length === 0 ? (
               <div className="text-center py-16">
-                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 mb-6">
+                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-emerald-100 to-green-100 mb-6">
                   <span className="text-5xl animate-bounce">📄</span>
                 </div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">No resumes yet</h3>
@@ -266,7 +241,7 @@ function Dashboard() {
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Link
                     to="/builder"
-                    className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-emerald-600 hover:to-green-600 transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     <span>✨ Create Resume</span>
                   </Link>

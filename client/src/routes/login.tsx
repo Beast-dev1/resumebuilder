@@ -1,8 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/login')({
-  component: Login,
-})
+import { Link } from '@tanstack/react-router'
 
 function Login() {
   return (
@@ -64,4 +60,6 @@ function Login() {
     </>
   )
 }
+
+export default Login
 

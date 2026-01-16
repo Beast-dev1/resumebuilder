@@ -85,7 +85,7 @@ function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 space-y-6">
         <h1 className="text-3xl font-bold text-gray-800 text-center">Login</h1>
         
@@ -105,7 +105,7 @@ function Login() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent ${
                 errors.email ? 'border-red-300' : 'border-gray-300'
               }`}
               placeholder="Enter your email"
@@ -125,7 +125,7 @@ function Login() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent ${
                 errors.password ? 'border-red-300' : 'border-gray-300'
               }`}
               placeholder="Enter your password"
@@ -139,7 +139,7 @@ function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 transition-all duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white font-semibold py-3 px-6 rounded-lg hover:from-emerald-600 hover:to-green-600 transition-all duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? 'Logging in...' : 'Login'}
           </button>
@@ -147,7 +147,7 @@ function Login() {
         
         <p className="text-center text-sm text-gray-600">
           Don't have an account?{' '}
-          <Link to="/signup" className="text-purple-600 hover:text-purple-800 underline">
+          <Link to="/signup" className="text-emerald-600 hover:text-emerald-800 underline">
             Sign Up
           </Link>
         </p>

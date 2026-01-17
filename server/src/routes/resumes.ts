@@ -56,7 +56,7 @@ router.get('/', authenticateToken, async (req: AuthRequest, res: Response): Prom
 
     const resumes = await Resume.find({ userId })
       .sort({ updatedAt: -1 }) // Most recent first
-      .select('-resumeData'); // Exclude large resumeData field for list view
+      .select('-resumeData -personal_info -professional_summary -experience -education -project -skills'); // Exclude large fields for list view
 
     sendSuccess(res, 200, resumes, 'Resumes fetched successfully');
   } catch (error) {
@@ -93,7 +93,19 @@ router.get('/:id', authenticateToken, async (req: AuthRequest, res: Response): P
 router.post('/', authenticateToken, async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
-    const { title, resumeData } = req.body;
+    const { 
+      title, 
+      personal_info,
+      professional_summary,
+      skills,
+      experience,
+      education,
+      project,
+      template,
+      accent_color,
+      public: isPublic,
+      resumeData // Legacy support
+    } = req.body;
 
     if (!userId) {
       sendError(res, 401, 'User not authenticated');
@@ -105,12 +117,59 @@ router.post('/', authenticateToken, async (req: AuthRequest, res: Response): Pro
       return;
     }
 
-    const resume = await Resume.create({
+    // Build resume object with structured fields
+    const resumePayload: any = {
       title: title.trim(),
       userId,
-      resumeData: resumeData || {},
       fileType: 'json', // Created from builder
-    });
+    };
+
+    // Add structured fields if provided
+    if (personal_info) resumePayload.personal_info = personal_info;
+    if (professional_summary !== undefined) resumePayload.professional_summary = professional_summary;
+    if (skills) resumePayload.skills = skills;
+    if (experience) resumePayload.experience = experience;
+    if (education) resumePayload.education = education;
+    if (project) resumePayload.project = project;
+    if (template) resumePayload.template = template;
+    if (accent_color) resumePayload.accent_color = accent_color;
+    if (isPublic !== undefined) resumePayload.public = isPublic;
+
+    // Legacy support: if resumeData is provided, merge it into structured fields if fields are missing
+    if (resumeData && typeof resumeData === 'object') {
+      resumePayload.resumeData = resumeData; // Keep for backward compatibility
+      
+      // If structured fields aren't provided, try to extract from resumeData
+      if (!personal_info && resumeData.personal_info) {
+        resumePayload.personal_info = resumeData.personal_info;
+      }
+      if (professional_summary === undefined && resumeData.professional_summary !== undefined) {
+        resumePayload.professional_summary = resumeData.professional_summary;
+      }
+      if (!skills && resumeData.skills) {
+        resumePayload.skills = resumeData.skills;
+      }
+      if (!experience && resumeData.experience) {
+        resumePayload.experience = resumeData.experience;
+      }
+      if (!education && resumeData.education) {
+        resumePayload.education = resumeData.education;
+      }
+      if (!project && resumeData.project) {
+        resumePayload.project = resumeData.project;
+      }
+      if (!template && resumeData.template) {
+        resumePayload.template = resumeData.template;
+      }
+      if (!accent_color && resumeData.accent_color) {
+        resumePayload.accent_color = resumeData.accent_color;
+      }
+      if (isPublic === undefined && resumeData.public !== undefined) {
+        resumePayload.public = resumeData.public;
+      }
+    }
+
+    const resume = await Resume.create(resumePayload);
 
     sendSuccess(res, 201, resume, 'Resume created successfully');
   } catch (error) {
@@ -200,6 +259,10 @@ router.delete('/:id', authenticateToken, async (req: AuthRequest, res: Response)
 });
 
 export default router;
+
+
+
+
 
 
 

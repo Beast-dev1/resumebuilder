@@ -224,6 +224,65 @@ router.post('/upload', authenticateToken, upload.single('file'), async (req: Aut
   }
 });
 
+// PUT /api/resumes/:id - Update resume
+router.put('/:id', authenticateToken, async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.id;
+    const resumeId = req.params.id;
+    const { 
+      title,
+      personal_info,
+      professional_summary,
+      skills,
+      experience,
+      education,
+      project,
+      template,
+      accent_color,
+      public: isPublic,
+      resumeData // Legacy support
+    } = req.body;
+
+    if (!userId) {
+      sendError(res, 401, 'User not authenticated');
+      return;
+    }
+
+    // Check if resume exists and belongs to user
+    const existingResume = await Resume.findOne({ _id: resumeId, userId });
+    if (!existingResume) {
+      sendError(res, 404, 'Resume not found');
+      return;
+    }
+
+    // Build update object with only provided fields
+    const updatePayload: any = {};
+
+    if (title) updatePayload.title = title.trim();
+    if (personal_info !== undefined) updatePayload.personal_info = personal_info;
+    if (professional_summary !== undefined) updatePayload.professional_summary = professional_summary;
+    if (skills !== undefined) updatePayload.skills = skills;
+    if (experience !== undefined) updatePayload.experience = experience;
+    if (education !== undefined) updatePayload.education = education;
+    if (project !== undefined) updatePayload.project = project;
+    if (template !== undefined) updatePayload.template = template;
+    if (accent_color !== undefined) updatePayload.accent_color = accent_color;
+    if (isPublic !== undefined) updatePayload.public = isPublic;
+    if (resumeData !== undefined) updatePayload.resumeData = resumeData; // Legacy support
+
+    const updatedResume = await Resume.findByIdAndUpdate(
+      resumeId,
+      { $set: updatePayload },
+      { new: true, runValidators: true }
+    );
+
+    sendSuccess(res, 200, updatedResume, 'Resume updated successfully');
+  } catch (error) {
+    console.error('Update resume error:', error);
+    sendError(res, 500, 'Internal server error');
+  }
+});
+
 // DELETE /api/resumes/:id - Delete resume
 router.delete('/:id', authenticateToken, async (req: AuthRequest, res: Response): Promise<void> => {
   try {

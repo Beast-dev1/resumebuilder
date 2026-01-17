@@ -79,6 +79,22 @@ export const uploadResume = async (file: File, title?: string) => {
   return response.data;
 };
 
+export const updateResume = async (id: string, data: { 
+  title?: string;
+  personal_info?: Record<string, any>;
+  professional_summary?: string;
+  skills?: string[];
+  experience?: Array<Record<string, any>>;
+  education?: Array<Record<string, any>>;
+  project?: Array<Record<string, any>>;
+  template?: string;
+  accent_color?: string;
+  public?: boolean;
+}) => {
+  const response = await api.put(`/api/resumes/${id}`, data);
+  return response.data;
+};
+
 export const deleteResume = async (id: string) => {
   const response = await api.delete(`/api/resumes/${id}`);
   return response.data;

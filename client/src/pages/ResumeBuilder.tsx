@@ -1,7 +1,8 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import Header from '../components/ui/Header'
 import ResumePreview from '../components/resume/ResumePreview'
+import { createResume, updateResume } from '../utils/api'
 
 const TOTAL_STEPS = 6
 
@@ -24,6 +25,7 @@ const ACCENT_COLORS = [
 ]
 
 function ResumeBuilder() {
+  const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedTemplate, setSelectedTemplate] = useState('classic')
   const [accentColor, setAccentColor] = useState('#3B82F6')
@@ -31,41 +33,44 @@ function ResumeBuilder() {
   const [copyLabel, setCopyLabel] = useState('Copy link')
   const [showTemplateMenu, setShowTemplateMenu] = useState(false)
   const [showAccentMenu, setShowAccentMenu] = useState(false)
+  const [resumeId, setResumeId] = useState<string | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [resumeTitle, setResumeTitle] = useState('My Resume')
 
   const [resumeData, setResumeData] = useState({
     personal_info: {
-      full_name: 'prakash rai',
-      email: 'prakashrai@gmail.com',
-      phone: '9876545672',
-      location: 'Kathmandu',
-      profession: 'Web Developer',
-      linkedin: 'www.linkedin/prakashin',
-      website: 'https://prakash-os-portfolio.vercel.app/desktop',
+      full_name: '',
+      email: '',
+      phone: '',
+      location: '',
+      profession: '',
+      linkedin: '',
+      website: '',
       image: null as File | string | null,
     },
-    professional_summary: 'im a full stack deveoper with react and node js',
+    professional_summary: '',
     experience: [
       {
-        company: 'aweb',
-        position: 'full stack',
-        start_date: '2026-02',
-        end_date: '2026-06',
+        company: '',
+        position: '',
+        start_date: '',
+        end_date: '',
         is_current: false,
         description: '',
       },
     ],
     education: [
       {
-        institution: 'CAB',
-        degree: 'bachelor',
-        field: 'Csit',
-        graduation_date: '2026-02',
-        gpa: '3.4',
+        institution: '',
+        degree: '',
+        field: '',
+        graduation_date: '',
+        gpa: '',
       },
     ],
     project: [
       {
-        name: 'hotal mang system',
+        name: '',
         type: '',
         description: '',
       },
@@ -245,6 +250,56 @@ function ResumeBuilder() {
     return dateStr.substring(0, 7)
   }
 
+  const handleSaveChanges = async () => {
+    try {
+      setIsSaving(true)
+
+      // Prepare resume data for API
+      // Note: File objects for images need separate upload handling
+      // For now, we only save image URLs (strings), not File objects
+      const personalInfoForSave = {
+        ...resumeData.personal_info,
+        image: typeof resumeData.personal_info.image === 'string' 
+          ? resumeData.personal_info.image 
+          : null, // Don't save File objects - they need to be uploaded separately
+      }
+
+      const resumePayload = {
+        title: resumeTitle || 'My Resume',
+        personal_info: personalInfoForSave,
+        professional_summary: resumeData.professional_summary,
+        skills: resumeData.skills,
+        experience: resumeData.experience,
+        education: resumeData.education,
+        project: resumeData.project,
+        template: selectedTemplate,
+        accent_color: accentColor,
+        public: isPublic,
+      }
+
+      if (resumeId) {
+        // Update existing resume
+        await updateResume(resumeId, resumePayload)
+      } else {
+        // Create new resume
+        const response = await createResume(resumePayload)
+        if (response.success && response.data?._id) {
+          setResumeId(response.data._id)
+        }
+      }
+
+      // On step 6, redirect to dashboard after saving
+      if (currentStep === TOTAL_STEPS) {
+        navigate({ to: '/dashboard' })
+      }
+    } catch (error: any) {
+      console.error('Error saving resume:', error)
+      alert(error.response?.data?.message || 'Failed to save resume. Please try again.')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
@@ -404,6 +459,14 @@ function ResumeBuilder() {
                 />
               </div>
             </div>
+
+            <button
+              onClick={handleSaveChanges}
+              disabled={isSaving}
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
           </div>
         )
 
@@ -446,6 +509,14 @@ function ResumeBuilder() {
                 relevant achievements and skills.
               </p>
             </div>
+
+            <button
+              onClick={handleSaveChanges}
+              disabled={isSaving}
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
           </div>
         )
 
@@ -596,6 +667,14 @@ function ResumeBuilder() {
                 + Add Experience
               </button>
             </div>
+
+            <button
+              onClick={handleSaveChanges}
+              disabled={isSaving}
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
           </div>
         )
 
@@ -715,6 +794,14 @@ function ResumeBuilder() {
                 + Add Education
               </button>
             </div>
+
+            <button
+              onClick={handleSaveChanges}
+              disabled={isSaving}
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
           </div>
         )
 
@@ -801,6 +888,14 @@ function ResumeBuilder() {
                 + Add Project
               </button>
             </div>
+
+            <button
+              onClick={handleSaveChanges}
+              disabled={isSaving}
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
           </div>
         )
 
@@ -869,6 +964,14 @@ function ResumeBuilder() {
                 communication).
               </p>
             </div>
+
+            <button
+              onClick={handleSaveChanges}
+              disabled={isSaving}
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
           </div>
         )
 
@@ -906,6 +1009,19 @@ function ResumeBuilder() {
             </svg>
             Back to Dashboard
           </Link>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Resume Title <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={resumeTitle}
+              onChange={(e) => setResumeTitle(e.target.value)}
+              placeholder="My Resume"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
 
           <div className="flex flex-wrap items-center gap-3 mb-4 md:mb-6">
             <div className="flex flex-col w-full sm:w-40 text-sm relative">

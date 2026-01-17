@@ -35,7 +35,6 @@ function ResumeBuilder() {
   const [showAccentMenu, setShowAccentMenu] = useState(false)
   const [resumeId, setResumeId] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
-  const [resumeTitle, setResumeTitle] = useState('My Resume')
 
   const [resumeData, setResumeData] = useState({
     personal_info: {
@@ -265,7 +264,7 @@ function ResumeBuilder() {
       }
 
       const resumePayload = {
-        title: resumeTitle || 'My Resume',
+        title: 'My Resume',
         personal_info: personalInfoForSave,
         professional_summary: resumeData.professional_summary,
         skills: resumeData.skills,
@@ -989,177 +988,162 @@ function ResumeBuilder() {
         onLogout={() => {}}
       />
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-4 md:py-6">
-        <div className="bg-white/90 backdrop-blur rounded-xl border border-gray-100 shadow-sm px-4 md:px-6 py-4 md:py-6 mb-4 md:mb-6">
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium mb-4"
+        <Link
+          to="/dashboard"
+          className="inline-flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium mb-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-            Back to Dashboard
-          </Link>
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          Back to Dashboard
+        </Link>
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Resume Title <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={resumeTitle}
-              onChange={(e) => setResumeTitle(e.target.value)}
-              placeholder="My Resume"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+          <div className="lg:col-span-2 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+            <div className="w-full bg-gray-200 h-1">
+              <div
+                className="bg-blue-600 h-1 transition-all duration-300"
+                style={{ width: `${(currentStep / TOTAL_STEPS) * 100}%` }}
+              />
+            </div>
+            <div className="p-4 md:p-6 border-b border-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="flex flex-col w-40 text-sm relative">
+                  <button
+                    onClick={() => {
+                      setShowTemplateMenu(!showTemplateMenu)
+                      setShowAccentMenu(false)
+                    }}
+                    className="peer w-full text-left px-4 pr-2 py-2 border rounded bg-white text-gray-700 border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none flex items-center justify-between"
+                  >
+                    <span>
+                      {TEMPLATES.find((t) => t.id === selectedTemplate)?.name ||
+                        'Template'}
+                    </span>
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+
+                  {showTemplateMenu && (
+                    <ul className="absolute z-10 top-full left-0 w-48 bg-white border border-gray-300 rounded shadow-md mt-2 py-1">
+                      {TEMPLATES.map((template) => (
+                        <li
+                          key={template.id}
+                          onClick={() => {
+                            setSelectedTemplate(template.id)
+                            setShowTemplateMenu(false)
+                          }}
+                          className="px-4 py-2 hover:bg-gray-500/10 cursor-pointer"
+                        >
+                          {template.name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+
+                <div className="flex flex-col w-40 text-sm relative">
+                  <button
+                    onClick={() => {
+                      setShowAccentMenu(!showAccentMenu)
+                      setShowTemplateMenu(false)
+                    }}
+                    className="peer w-full text-left px-4 pr-2 py-2 border rounded bg-white text-gray-700 border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none flex items-center justify-between"
+                  >
+                    <span>Accent</span>
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+
+                  {showAccentMenu && (
+                    <div className="absolute z-10 top-full right-0 w-48 bg-white border border-gray-300 rounded shadow-md mt-2 p-3">
+                      <div className="grid grid-cols-4 gap-2">
+                        {ACCENT_COLORS.map((color) => (
+                          <button
+                            key={color}
+                            onClick={() => {
+                              setAccentColor(color)
+                              setShowAccentMenu(false)
+                            }}
+                            className={`w-8 h-8 rounded-full border-2 ${
+                              accentColor === color
+                                ? 'border-gray-800'
+                                : 'border-gray-300'
+                            }`}
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex-1" />
+
+                <button
+                  onClick={prevStep}
+                  disabled={currentStep === 1}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                >
+                  ← Previous
+                </button>
+                <button
+                  onClick={nextStep}
+                  disabled={currentStep === TOTAL_STEPS}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                >
+                  Next →
+                </button>
+              </div>
+            </div>
+
+            <div className="p-4 md:p-6 overflow-y-auto flex-1 max-h-[calc(100vh-300px)]">
+              {renderStepContent()}
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 mb-4 md:mb-6">
-            <div className="flex flex-col w-full sm:w-40 text-sm relative">
-              <button
-                onClick={() => {
-                  setShowTemplateMenu(!showTemplateMenu)
-                  setShowAccentMenu(false)
-                }}
-                className="peer w-full text-left px-4 pr-2 py-2 border rounded bg-white text-gray-700 border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none flex items-center justify-between"
-              >
-                <span>
-                  {TEMPLATES.find((t) => t.id === selectedTemplate)?.name ||
-                    'Template'}
-                </span>
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              {showTemplateMenu && (
-                <ul className="absolute z-10 top-full overflow-hidden right-0 w-40 bg-white border border-gray-300 rounded shadow-md mt-2 py-1">
-                  {TEMPLATES.map((template) => (
-                    <li
-                      key={template.id}
-                      onClick={() => {
-                        setSelectedTemplate(template.id)
-                        setShowTemplateMenu(false)
-                      }}
-                      className="px-4 py-2 hover:bg-gray-500/10 cursor-pointer"
-                    >
-                      {template.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            <div className="flex flex-col w-full sm:w-40 text-sm relative">
-              <button
-                onClick={() => {
-                  setShowAccentMenu(!showAccentMenu)
-                  setShowTemplateMenu(false)
-                }}
-                className="peer w-full text-left px-4 pr-2 py-2 border rounded bg-white text-gray-700 border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none flex items-center justify-between"
-              >
-                <span>Accent</span>
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              {showAccentMenu && (
-                <div className="absolute z-10 top-full right-0 w-48 bg-white border border-gray-300 rounded shadow-md mt-2 p-3">
-                  <div className="grid grid-cols-4 gap-2">
-                    {ACCENT_COLORS.map((color) => (
-                      <button
-                        key={color}
-                        onClick={() => {
-                          setAccentColor(color)
-                          setShowAccentMenu(false)
-                        }}
-                        className={`w-8 h-8 rounded-full border-2 ${
-                          accentColor === color
-                            ? 'border-gray-800'
-                            : 'border-gray-300'
-                        }`}
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="flex-1" />
-
-            <button
-              type="button"
-              onClick={() => setIsPublic((prev) => !prev)}
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition ${
-                isPublic
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                  : 'bg-purple-50 text-purple-700 border-purple-200'
-              }`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                {isPublic ? (
-                  <>
-                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </>
-                ) : (
-                  <>
-                    <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a21 21 0 0 1 5.06-5.94" />
-                    <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.04 21.04 0 0 1-3.17 4.47" />
-                    <path d="M14.12 14.12A3 3 0 0 1 9.88 9.88" />
-                    <path d="M1 1l22 22" />
-                  </>
-                )}
-              </svg>
-              {isPublic ? 'Public' : 'Private'}
-            </button>
-
-            {isPublic && (
+          <div className="lg:col-span-3 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col min-h-[600px]">
+            <div className="p-4 border-b border-gray-100 flex justify-end gap-2">
               <button
                 type="button"
-                onClick={handleShare}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100 transition"
+                onClick={() => setIsPublic((prev) => !prev)}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition ${
+                  isPublic
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    : 'bg-purple-50 text-purple-700 border-purple-200'
+                }`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -1172,81 +1156,74 @@ function ResumeBuilder() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <circle cx="18" cy="5" r="3" />
-                  <circle cx="6" cy="12" r="3" />
-                  <circle cx="18" cy="19" r="3" />
-                  <path d="M8.59 13.51 15.42 17.49" />
-                  <path d="M15.41 6.51 8.59 10.49" />
+                  {isPublic ? (
+                    <>
+                      <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </>
+                  ) : (
+                    <>
+                      <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a21 21 0 0 1 5.06-5.94" />
+                      <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.04 21.04 0 0 1-3.17 4.47" />
+                      <path d="M14.12 14.12A3 3 0 0 1 9.88 9.88" />
+                      <path d="M1 1l22 22" />
+                    </>
+                  )}
                 </svg>
-                {copyLabel}
+                {isPublic ? 'Public' : 'Private'}
               </button>
-            )}
 
-            <button
-              type="button"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border border-green-200 bg-green-50 text-green-700 hover:bg-green-100 transition"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+              {isPublic && (
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100 transition"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="18" cy="5" r="3" />
+                    <circle cx="6" cy="12" r="3" />
+                    <circle cx="18" cy="19" r="3" />
+                    <path d="M8.59 13.51 15.42 17.49" />
+                    <path d="M15.41 6.51 8.59 10.49" />
+                  </svg>
+                  {copyLabel}
+                </button>
+              )}
+
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border border-green-200 bg-green-50 text-green-700 hover:bg-green-100 transition"
               >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <path d="M7 10l5 5 5-5" />
-                <path d="M12 15V3" />
-              </svg>
-              Download
-            </button>
-          </div>
-
-          <div className="mb-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-gray-700">
-                Step {currentStep} of {TOTAL_STEPS}
-              </span>
-              <span className="text-sm text-gray-500">
-                {Math.round((currentStep / TOTAL_STEPS) * 100)}%
-              </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <path d="M7 10l5 5 5-5" />
+                  <path d="M12 15V3" />
+                </svg>
+                Download
+              </button>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${(currentStep / TOTAL_STEPS) * 100}%` }}
-              />
-            </div>
-          </div>
 
-          <div className="flex justify-between items-center gap-3 pt-2">
-            <button
-              onClick={prevStep}
-              disabled={currentStep === 1}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              ← Previous
-            </button>
-            <button
-              onClick={nextStep}
-              disabled={currentStep === TOTAL_STEPS}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              Next →
-            </button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-          <div className="lg:col-span-2 bg-white rounded-xl border border-gray-100 shadow-sm p-4 md:p-6 overflow-y-auto max-h-[calc(100vh-250px)]">
-            {renderStepContent()}
-          </div>
-
-          <div className="lg:col-span-3 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden min-h-[600px]">
-            <div className="h-full">
+            <div className="h-full overflow-auto">
               <ResumePreview
                 data={resumeData}
                 templateId={selectedTemplate}

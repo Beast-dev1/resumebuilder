@@ -39,6 +39,11 @@ const builderRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/builder',
   component: ResumeBuilder,
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      resumeId: (search.resumeId as string) || undefined,
+    }
+  },
 })
 
 const previewRoute = createRoute({

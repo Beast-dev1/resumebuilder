@@ -1,8 +1,8 @@
-import { Link, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
+import { Link, useNavigate, useSearch } from '@tanstack/react-router'
+import { useState, useEffect } from 'react'
 import Header from '../components/ui/Header'
 import ResumePreview from '../components/resume/ResumePreview'
-import { createResume, updateResume } from '../utils/api'
+import { createResume, updateResume, getResume } from '../utils/api'
 
 const TOTAL_STEPS = 6
 
@@ -26,6 +26,7 @@ const ACCENT_COLORS = [
 
 function ResumeBuilder() {
   const navigate = useNavigate()
+  const { resumeId: searchResumeId } = useSearch({ from: '/builder' })
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedTemplate, setSelectedTemplate] = useState('classic')
   const [accentColor, setAccentColor] = useState('#3B82F6')
@@ -35,6 +36,7 @@ function ResumeBuilder() {
   const [showAccentMenu, setShowAccentMenu] = useState(false)
   const [resumeId, setResumeId] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const [resumeData, setResumeData] = useState({
     personal_info: {
@@ -78,6 +80,79 @@ function ResumeBuilder() {
   })
 
   const [newSkill, setNewSkill] = useState('')
+
+  // Fetch resume data when resumeId is present in URL
+  useEffect(() => {
+    const loadResumeData = async () => {
+      if (searchResumeId && resumeId !== searchResumeId) {
+        try {
+          setIsLoading(true)
+          const response = await getResume(searchResumeId)
+          if (response.success && response.data) {
+            const data = response.data
+            setResumeId(data._id)
+
+            // Set template and accent color if present
+            if (data.template) {
+              setSelectedTemplate(data.template)
+            }
+            if (data.accent_color) {
+              setAccentColor(data.accent_color)
+            }
+            if (data.public !== undefined) {
+              setIsPublic(data.public)
+            }
+
+            // Set resume data
+            if (data.resumeData || data.personal_info || data.professional_summary) {
+              setResumeData({
+                personal_info: {
+                  full_name: data.resumeData?.personal_info?.full_name || data.personal_info?.full_name || '',
+                  email: data.resumeData?.personal_info?.email || data.personal_info?.email || '',
+                  phone: data.resumeData?.personal_info?.phone || data.personal_info?.phone || '',
+                  location: data.resumeData?.personal_info?.location || data.personal_info?.location || '',
+                  profession: data.resumeData?.personal_info?.profession || data.personal_info?.profession || '',
+                  linkedin: data.resumeData?.personal_info?.linkedin || data.personal_info?.linkedin || '',
+                  website: data.resumeData?.personal_info?.website || data.personal_info?.website || '',
+                  image: data.resumeData?.personal_info?.image || data.personal_info?.image || null,
+                },
+                professional_summary: data.resumeData?.professional_summary || data.professional_summary || '',
+                experience: data.resumeData?.experience || data.experience || [{
+                  company: '',
+                  position: '',
+                  start_date: '',
+                  end_date: '',
+                  is_current: false,
+                  description: '',
+                }],
+                education: data.resumeData?.education || data.education || [{
+                  institution: '',
+                  degree: '',
+                  field: '',
+                  graduation_date: '',
+                  gpa: '',
+                }],
+                project: data.resumeData?.project || data.project || [{
+                  name: '',
+                  type: '',
+                  description: '',
+                }],
+                skills: data.resumeData?.skills || data.skills || [],
+              })
+            }
+          }
+        } catch (error) {
+          console.error('Error loading resume data:', error)
+          alert('Failed to load resume data. Please try again.')
+        } finally {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadResumeData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchResumeId])
 
   const resumeUrl =
     typeof window !== 'undefined' ? `${window.location.origin}/preview` : ''

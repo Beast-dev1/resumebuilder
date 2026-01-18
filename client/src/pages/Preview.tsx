@@ -57,6 +57,7 @@ function Preview() {
               </button>
               <Link
                 to="/builder"
+                search={{ resumeId: undefined }}
                 className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-600 transition-all duration-200 shadow-md"
               >
                 Edit Resume
@@ -73,7 +74,7 @@ function Preview() {
           </div>
 
           <div className="text-center">
-            <Link to="/builder" className="text-gray-500 hover:text-gray-700 text-sm">
+            <Link to="/builder" search={{ resumeId: undefined }} className="text-gray-500 hover:text-gray-700 text-sm">
               ← Back to Builder
             </Link>
           </div>

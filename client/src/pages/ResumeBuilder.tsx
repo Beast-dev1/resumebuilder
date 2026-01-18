@@ -386,17 +386,68 @@ function ResumeBuilder() {
 
     try {
       setIsDownloading(true)
-      const element = previewRef.current
+      const container = previewRef.current
+      
+      // A4 dimensions in pixels at 96 DPI
+      // A4 = 210mm × 297mm = 793.7px × 1122.5px (at 96 DPI)
+      const A4_WIDTH_PX = 794 // A4 width in pixels
+      
+      // Find the actual content element (the div inside ResumePreview with template)
+      const contentElement = (container?.querySelector('div > div') || container) as HTMLElement
+      
+      // Store original styles for container and content
+      const originalContainerWidth = container!.style.width
+      const originalContainerMinWidth = container!.style.minWidth
+      const originalContainerMaxWidth = container!.style.maxWidth
+      const originalContainerOverflow = container!.style.overflow
+      const originalContainerPosition = container!.style.position
+      const originalContainerLeft = container!.style.left
+      const originalContainerZIndex = container!.style.zIndex
+      
+      const originalContentWidth = contentElement.style.width
+      const originalContentMinWidth = contentElement.style.minWidth
+      const originalContentMaxWidth = contentElement.style.maxWidth
+      
+      // Temporarily set both container and content to A4 width for capture
+      container!.style.width = `${A4_WIDTH_PX}px`
+      container!.style.minWidth = `${A4_WIDTH_PX}px`
+      container!.style.maxWidth = `${A4_WIDTH_PX}px`
+      container!.style.overflow = 'visible'
+      container!.style.position = 'fixed'
+      container!.style.left = '-9999px'
+      container!.style.zIndex = '-9999'
+      
+      // Set content element width as well
+      contentElement.style.width = `${A4_WIDTH_PX}px`
+      contentElement.style.minWidth = `${A4_WIDTH_PX}px`
+      contentElement.style.maxWidth = `${A4_WIDTH_PX}px`
+      
+      // Wait a moment for styles to apply
+      await new Promise(resolve => setTimeout(resolve, 200))
 
-      // Create canvas from the preview element
-      const canvas = await html2canvas(element, {
+      // Create canvas from the preview element at A4 width
+      const canvas = await html2canvas(contentElement, {
         scale: 2,
         useCORS: true,
         logging: false,
         backgroundColor: '#ffffff',
+        width: A4_WIDTH_PX,
       })
 
-      // Calculate dimensions
+      // Restore original styles
+      container!.style.width = originalContainerWidth
+      container!.style.minWidth = originalContainerMinWidth
+      container!.style.maxWidth = originalContainerMaxWidth
+      container!.style.overflow = originalContainerOverflow
+      container!.style.position = originalContainerPosition
+      container!.style.left = originalContainerLeft
+      container!.style.zIndex = originalContainerZIndex
+      
+      contentElement.style.width = originalContentWidth
+      contentElement.style.minWidth = originalContentMinWidth
+      contentElement.style.maxWidth = originalContentMaxWidth
+
+      // Calculate dimensions for PDF
       const imgWidth = 210 // A4 width in mm
       const pageHeight = 297 // A4 height in mm
       const imgHeight = (canvas.height * imgWidth) / canvas.width

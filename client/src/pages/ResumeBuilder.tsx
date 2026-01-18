@@ -1,8 +1,10 @@
 import { Link, useNavigate, useSearch } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Header from '../components/ui/Header'
 import ResumePreview from '../components/resume/ResumePreview'
 import { createResume, updateResume, getResume } from '../utils/api'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 const TOTAL_STEPS = 6
 
@@ -37,6 +39,8 @@ function ResumeBuilder() {
   const [resumeId, setResumeId] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
+  const previewRef = useRef<HTMLDivElement>(null)
 
   const [resumeData, setResumeData] = useState({
     personal_info: {
@@ -371,6 +375,63 @@ function ResumeBuilder() {
       alert(error.response?.data?.message || 'Failed to save resume. Please try again.')
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const handleDownloadPDF = async () => {
+    if (!previewRef.current) {
+      alert('Preview not available. Please wait for the resume to load.')
+      return
+    }
+
+    try {
+      setIsDownloading(true)
+      const element = previewRef.current
+
+      // Create canvas from the preview element
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+      })
+
+      // Calculate dimensions
+      const imgWidth = 210 // A4 width in mm
+      const pageHeight = 297 // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+      let heightLeft = imgHeight
+
+      // Create PDF
+      const pdf = new jsPDF('p', 'mm', 'a4')
+      let position = 0
+
+      // Convert canvas to image
+      const imgData = canvas.toDataURL('image/png')
+
+      // Add first page
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+      heightLeft -= pageHeight
+
+      // Add additional pages if content exceeds one page
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight
+        pdf.addPage()
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+        heightLeft -= pageHeight
+      }
+
+      // Generate filename
+      const name = resumeData.personal_info.full_name || 'Resume'
+      const filename = `${name.replace(/\s+/g, '_')}_Resume.pdf`
+
+      // Download PDF
+      pdf.save(filename)
+    } catch (error) {
+      console.error('Error generating PDF:', error)
+      alert('Failed to generate PDF. Please try again.')
+    } finally {
+      setIsDownloading(false)
     }
   }
 
@@ -1125,7 +1186,9 @@ function ResumeBuilder() {
 
             <button
               type="button"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border border-green-200 bg-green-50 text-green-700 hover:bg-green-100 transition"
+              onClick={handleDownloadPDF}
+              disabled={isDownloading}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border border-green-200 bg-green-50 text-green-700 hover:bg-green-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -1142,7 +1205,7 @@ function ResumeBuilder() {
                 <path d="M7 10l5 5 5-5" />
                 <path d="M12 15V3" />
               </svg>
-              Download
+              {isDownloading ? 'Downloading...' : 'Download'}
             </button>
           </div>
         </div>
@@ -1275,7 +1338,7 @@ function ResumeBuilder() {
 
           {/* Right column: 3/5 width (preview area) */}
           <div className="lg:col-span-3 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden min-h-[600px]">
-            <div className="h-full">
+            <div className="h-full" ref={previewRef}>
               <ResumePreview
                 data={resumeData}
                 templateId={selectedTemplate}

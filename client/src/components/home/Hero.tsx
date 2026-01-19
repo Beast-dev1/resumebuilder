@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react';
+import { Link } from '@tanstack/react-router';
 import Logo from '../ui/Logo';
+import { isAuthenticated } from '../../utils/auth';
 
 function Hero() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(isAuthenticated());
+  }, []);
 
   useEffect(() => {
     // Prevent body scroll when menu is open on mobile
@@ -84,6 +91,32 @@ function Hero() {
             >
               Contact
             </a>
+            {isLoggedIn ? (
+              <Link
+                to="/dashboard"
+                className="hover:text-green-600 transition cursor-pointer md:hidden"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="hover:text-green-600 transition cursor-pointer md:hidden"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="hover:text-green-600 transition cursor-pointer md:hidden"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
             <button
               id="closeMenu"
               className="md:hidden text-gray-600"
@@ -120,12 +153,29 @@ function Hero() {
                 />
               </svg>
             </button>
-            <a
-              className="hidden md:flex bg-green-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-green-700 transition"
-              href="/signup"
-            >
-              Sign up
-            </a>
+            {isLoggedIn ? (
+              <Link
+                to="/dashboard"
+                className="hidden md:flex bg-green-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-green-700 transition"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="hidden md:flex border border-green-600 text-green-600 px-5 py-2 rounded-full text-sm font-medium hover:bg-green-50 transition"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="hidden md:flex bg-green-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-green-700 transition"
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
             <button
               id="openMenu"
               className="md:hidden text-gray-600"
@@ -146,29 +196,55 @@ function Hero() {
           </div>
         </header>
         <main className="flex-grow flex flex-col items-center max-w-7xl mx-auto w-full">
-          <button
-            className="mt-16 mb-6 flex items-center space-x-2 border border-green-600 text-green-600 text-xs rounded-full px-4 pr-1.5 py-1.5 hover:bg-green-50 transition"
-            type="button"
-          >
-            <span>Create your professional resume in minutes</span>
-            <span className="flex items-center justify-center size-6 p-1 rounded-full bg-green-600">
-              <svg
-                width="14"
-                height="11"
-                viewBox="0 0 16 13"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M1 6.5h14M9.5 1 15 6.5 9.5 12"
-                  stroke="#fff"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-          </button>
+          {isLoggedIn ? (
+            <Link
+              to="/builder"
+              className="mt-16 mb-6 flex items-center space-x-2 border border-green-600 text-green-600 text-xs rounded-full px-4 pr-1.5 py-1.5 hover:bg-green-50 transition"
+            >
+              <span>Create your professional resume in minutes</span>
+              <span className="flex items-center justify-center size-6 p-1 rounded-full bg-green-600">
+                <svg
+                  width="14"
+                  height="11"
+                  viewBox="0 0 16 13"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1 6.5h14M9.5 1 15 6.5 9.5 12"
+                    stroke="#fff"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="mt-16 mb-6 flex items-center space-x-2 border border-green-600 text-green-600 text-xs rounded-full px-4 pr-1.5 py-1.5 hover:bg-green-50 transition"
+            >
+              <span>Create your professional resume in minutes</span>
+              <span className="flex items-center justify-center size-6 p-1 rounded-full bg-green-600">
+                <svg
+                  width="14"
+                  height="11"
+                  viewBox="0 0 16 13"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1 6.5h14M9.5 1 15 6.5 9.5 12"
+                    stroke="#fff"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </Link>
+          )}
           <h1 className="text-center text-gray-900 font-semibold text-3xl sm:text-4xl md:text-5xl max-w-2xl leading-tight">
             Build your perfect resume with
             <span className="text-green-600"> AI-powered tools</span>
@@ -177,27 +253,51 @@ function Hero() {
             Stand out from the crowd with professionally designed templates and
             intelligent content suggestions tailored to your industry.
           </p>
-          <button
-            className="mt-8 bg-green-600 text-white px-6 pr-2.5 py-2.5 rounded-full text-sm font-medium flex items-center space-x-2 hover:bg-green-700 transition"
-            type="button"
-          >
-            <span>Start Building Now</span>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+          {isLoggedIn ? (
+            <Link
+              to="/dashboard"
+              className="mt-8 bg-green-600 text-white px-6 pr-2.5 py-2.5 rounded-full text-sm font-medium flex items-center space-x-2 hover:bg-green-700 transition"
             >
-              <path
-                d="M4.821 11.999h13.43m0 0-6.714-6.715m6.715 6.715-6.715 6.715"
-                stroke="#fff"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
+              <span>Go to Dashboard</span>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4.821 11.999h13.43m0 0-6.714-6.715m6.715 6.715-6.715 6.715"
+                  stroke="#fff"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </Link>
+          ) : (
+            <Link
+              to="/signup"
+              className="mt-8 bg-green-600 text-white px-6 pr-2.5 py-2.5 rounded-full text-sm font-medium flex items-center space-x-2 hover:bg-green-700 transition"
+            >
+              <span>Start Building Now</span>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4.821 11.999h13.43m0 0-6.714-6.715m6.715 6.715-6.715 6.715"
+                  stroke="#fff"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </Link>
+          )}
           <div
             aria-label="Resume templates preview"
             className="mt-12 flex max-md:overflow-x-auto gap-6 max-w-4xl w-full pb-6"

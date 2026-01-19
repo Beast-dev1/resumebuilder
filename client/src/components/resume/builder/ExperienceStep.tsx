@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ResumeData, Experience } from '../../../types/resume'
-import { formatDateForInput, formatDateForState } from '../../../utils/resume'
+import { DatePicker } from '@/components/ui/date-picker'
 import AIEnhancementModal from './AIEnhancementModal'
 
 interface ExperienceStepProps {
@@ -94,42 +94,26 @@ export default function ExperienceStep({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Start Date
-                </label>
-                <input
-                  type="month"
-                  value={formatDateForInput(exp.start_date)}
-                  onChange={(e) =>
-                    onUpdateExperience(
-                      index,
-                      'start_date',
-                      formatDateForState(e.target.value)
-                    )
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                />
-              </div>
+              <DatePicker
+                label="Start Date"
+                value={exp.start_date}
+                onChange={(value) =>
+                  onUpdateExperience(index, 'start_date', value)
+                }
+                placeholder="Select start date"
+                id={`start-date-${index}`}
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  End Date
-                </label>
-                <input
-                  type="month"
-                  value={formatDateForInput(exp.end_date)}
-                  onChange={(e) =>
-                    onUpdateExperience(
-                      index,
-                      'end_date',
-                      formatDateForState(e.target.value)
-                    )
-                  }
-                  disabled={exp.is_current}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
-                />
-              </div>
+              <DatePicker
+                label="End Date"
+                value={exp.end_date}
+                onChange={(value) =>
+                  onUpdateExperience(index, 'end_date', value)
+                }
+                placeholder="Select end date"
+                disabled={exp.is_current}
+                id={`end-date-${index}`}
+              />
             </div>
 
             <div className="flex items-center gap-2">

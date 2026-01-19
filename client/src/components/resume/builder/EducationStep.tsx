@@ -1,5 +1,5 @@
 import { ResumeData, Education } from '../../../types/resume'
-import { formatDateForInput, formatDateForState } from '../../../utils/resume'
+import { DatePicker } from '@/components/ui/date-picker'
 
 interface EducationStepProps {
   resumeData: ResumeData
@@ -84,23 +84,15 @@ export default function EducationStep({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Graduation Date
-                </label>
-                <input
-                  type="month"
-                  value={formatDateForInput(edu.graduation_date)}
-                  onChange={(e) =>
-                    onUpdateEducation(
-                      index,
-                      'graduation_date',
-                      formatDateForState(e.target.value)
-                    )
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                />
-              </div>
+              <DatePicker
+                label="Graduation Date"
+                value={edu.graduation_date}
+                onChange={(value) =>
+                  onUpdateEducation(index, 'graduation_date', value)
+                }
+                placeholder="Select graduation date"
+                id={`graduation-date-${index}`}
+              />
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">

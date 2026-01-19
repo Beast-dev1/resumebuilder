@@ -100,5 +100,11 @@ export const deleteResume = async (id: string) => {
   return response.data;
 };
 
+// AI Enhancement API functions
+export const enhanceText = async (text: string, type: 'summary' | 'description') => {
+  const response = await api.post('/api/ai/enhance', { text, type });
+  return response.data;
+};
+
 export default api;
 

@@ -39,7 +39,7 @@ function ResumeCard({ id, title, updatedAt, fileType, onDelete, isDeleting }: Re
         <div className="flex items-center gap-3">
           <span className="text-3xl">{getFileTypeIcon(fileType)}</span>
           <div>
-            <h3 className="font-semibold text-gray-800 text-lg group-hover:text-purple-600 transition-colors">
+            <h3 className="font-semibold text-gray-800 text-lg group-hover:text-emerald-600 transition-colors">
               {title}
             </h3>
             <p className="text-sm text-gray-500 mt-1">
@@ -53,7 +53,7 @@ function ResumeCard({ id, title, updatedAt, fileType, onDelete, isDeleting }: Re
         <Link
           to="/builder"
           search={{ resumeId: id }}
-          className="flex-1 text-center px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-sm"
+          className="flex-1 text-center px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-sm font-medium rounded-lg hover:from-emerald-600 hover:to-green-600 transition-all duration-200 shadow-sm"
         >
           Edit
         </Link>

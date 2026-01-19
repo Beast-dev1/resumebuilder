@@ -37,15 +37,6 @@ function Header({ username, recentResumes, isLoading, onLogout }: HeaderProps) {
             </div>
           </div>
         </div>
-
-        {!isLoading && recentResumes > 0 && (
-          <div className="flex flex-wrap gap-4 mt-4">
-            <div className="flex items-center gap-2 px-4 py-2 bg-green-50 rounded-lg border border-green-100">
-              <span className="text-green-600 font-semibold">{recentResumes}</span>
-              <span className="text-gray-600 text-sm">Updated This Week</span>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -1,14 +1,37 @@
-import express, { Express } from 'express';
-import cors from 'cors';
+// Load environment variables FIRST, before any other imports
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
+
+// Try to load .env from multiple possible locations
+const envPaths = [
+  path.join(__dirname, '../.env'),  // server/.env (when compiled from dist)
+  path.join(process.cwd(), '.env'),  // Current working directory
+  path.join(process.cwd(), 'server', '.env'),  // If running from project root
+];
+
+// Load the first .env file that exists
+let envLoaded = false;
+for (const envPath of envPaths) {
+  if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath });
+    console.log(`✅ Loaded .env from: ${envPath}`);
+    envLoaded = true;
+    break;
+  }
+}
+
+// Also try default location (current working directory) as fallback
+if (!envLoaded) {
+  dotenv.config();
+}
+
+import express, { Express } from 'express';
+import cors from 'cors';
 import { connectDatabase } from './config/database';
 import authRoutes from './routes/auth';
 import resumeRoutes from './routes/resumes';
 import aiRoutes from './routes/ai';
-
-// Load environment variables
-dotenv.config();
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;

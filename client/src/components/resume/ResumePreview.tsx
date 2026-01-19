@@ -6,6 +6,8 @@ import MinimalTemplate from '../../assets/templates/MinimalTemplate'
 import ModernTemplate from '../../assets/templates/ModernTemplate'
 // @ts-ignore - JSX template files
 import MinimalImageTemplate from '../../assets/templates/MinimalImageTemplate'
+// @ts-ignore - JSX template files
+import ProfessionalTemplate from '../../assets/templates/ProfessionalTemplate'
 
 interface ResumePreviewProps {
   data: any
@@ -18,6 +20,7 @@ const templateMap: Record<string, React.ComponentType<any>> = {
   minimal: MinimalTemplate as React.ComponentType<any>,
   modern: ModernTemplate as React.ComponentType<any>,
   'minimal-image': MinimalImageTemplate as React.ComponentType<any>,
+  professional: ProfessionalTemplate as React.ComponentType<any>,
 }
 
 function ResumePreview({ data, templateId, accentColor }: ResumePreviewProps) {

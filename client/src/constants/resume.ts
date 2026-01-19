@@ -5,6 +5,7 @@ export const TEMPLATES = [
   { id: 'minimal', name: 'Minimal' },
   { id: 'modern', name: 'Modern' },
   { id: 'minimal-image', name: 'Minimal Image' },
+  { id: 'professional', name: 'Professional' },
 ]
 
 export const ACCENT_COLORS = [

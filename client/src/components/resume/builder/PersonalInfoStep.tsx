@@ -86,7 +86,7 @@ export default function PersonalInfoStep({
             type="text"
             value={resumeData.personal_info.full_name}
             onChange={(e) => onUpdatePersonalInfo('full_name', e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
         </div>
 
@@ -98,7 +98,7 @@ export default function PersonalInfoStep({
             type="email"
             value={resumeData.personal_info.email}
             onChange={(e) => onUpdatePersonalInfo('email', e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
         </div>
 
@@ -110,7 +110,7 @@ export default function PersonalInfoStep({
             type="tel"
             value={resumeData.personal_info.phone}
             onChange={(e) => onUpdatePersonalInfo('phone', e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
         </div>
 
@@ -122,7 +122,7 @@ export default function PersonalInfoStep({
             type="text"
             value={resumeData.personal_info.location}
             onChange={(e) => onUpdatePersonalInfo('location', e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
         </div>
 
@@ -134,7 +134,7 @@ export default function PersonalInfoStep({
             type="text"
             value={resumeData.personal_info.profession}
             onChange={(e) => onUpdatePersonalInfo('profession', e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
         </div>
 
@@ -146,7 +146,7 @@ export default function PersonalInfoStep({
             type="text"
             value={resumeData.personal_info.linkedin}
             onChange={(e) => onUpdatePersonalInfo('linkedin', e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
         </div>
 
@@ -158,7 +158,7 @@ export default function PersonalInfoStep({
             type="url"
             value={resumeData.personal_info.website}
             onChange={(e) => onUpdatePersonalInfo('website', e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function PersonalInfoStep({
       <button
         onClick={onSave}
         disabled={isSaving}
-        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {isSaving ? 'Saving...' : 'Save Changes'}
       </button>

@@ -21,13 +21,10 @@ export default function TemplateSelector({
         onClick={() => {
           onToggleMenu()
         }}
-        className="peer w-full text-left px-4 pr-2 py-2 border rounded bg-white text-gray-700 border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none flex items-center justify-between"
+        className="peer w-full text-left px-3 py-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 focus:outline-none flex items-center gap-2 transition-colors"
       >
-        <span>
-          {TEMPLATES.find((t) => t.id === selectedTemplate)?.name || 'Template'}
-        </span>
         <svg
-          className="w-4 h-4"
+          className="w-5 h-5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -36,9 +33,12 @@ export default function TemplateSelector({
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
-            d="M19 9l-7 7-7-7"
+            d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"
           />
         </svg>
+        <span className="font-medium">
+          {TEMPLATES.find((t) => t.id === selectedTemplate)?.name || 'Template'}
+        </span>
       </button>
 
       {showMenu && (

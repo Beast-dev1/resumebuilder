@@ -21,11 +21,10 @@ export default function AccentColorSelector({
         onClick={() => {
           onToggleMenu()
         }}
-        className="peer w-full text-left px-4 pr-2 py-2 border rounded bg-white text-gray-700 border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none flex items-center justify-between"
+        className="peer w-full text-left px-3 py-2 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 focus:outline-none flex items-center gap-2 transition-colors"
       >
-        <span>Accent</span>
         <svg
-          className="w-4 h-4"
+          className="w-5 h-5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -34,9 +33,10 @@ export default function AccentColorSelector({
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
-            d="M19 9l-7 7-7-7"
+            d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
           />
         </svg>
+        <span className="font-medium">Accent</span>
       </button>
 
       {showMenu && (

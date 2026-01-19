@@ -77,7 +77,7 @@ export default function ExperienceStep({
                 type="text"
                 value={exp.company}
                 onChange={(e) => onUpdateExperience(index, 'company', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
 
@@ -89,7 +89,7 @@ export default function ExperienceStep({
                 type="text"
                 value={exp.position}
                 onChange={(e) => onUpdateExperience(index, 'position', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
 
@@ -108,7 +108,7 @@ export default function ExperienceStep({
                       formatDateForState(e.target.value)
                     )
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
               </div>
 
@@ -169,7 +169,7 @@ export default function ExperienceStep({
                 value={exp.description}
                 onChange={(e) => onUpdateExperience(index, 'description', e.target.value)}
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 placeholder="Describe your key responsibilities and achievements..."
               />
             </div>
@@ -187,7 +187,7 @@ export default function ExperienceStep({
       <button
         onClick={onSave}
         disabled={isSaving}
-        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {isSaving ? 'Saving...' : 'Save Changes'}
       </button>

@@ -41,11 +41,11 @@ export default function SkillsStep({
               }
             }}
             placeholder="Enter a skill (e.g., JavaScript, Project Management)"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
           <button
             onClick={onAddSkill}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
           >
             Add
           </button>
@@ -63,12 +63,12 @@ export default function SkillsStep({
             {resumeData.skills.map((skill, index) => (
               <div
                 key={index}
-                className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full"
+                className="flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 rounded-full"
               >
                 <span className="text-sm">{skill}</span>
                 <button
                   onClick={() => onRemoveSkill(index)}
-                  className="text-blue-500 hover:text-blue-700"
+                  className="text-green-500 hover:text-green-700"
                 >
                   ×
                 </button>
@@ -87,7 +87,7 @@ export default function SkillsStep({
       <button
         onClick={onSave}
         disabled={isSaving}
-        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {isSaving ? 'Saving...' : 'Save Changes'}
       </button>

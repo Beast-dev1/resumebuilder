@@ -190,7 +190,7 @@ function ResumeBuilder() {
             <ResumeBuilderProgressBar currentStep={currentStep} />
 
             {/* Template, Accent, Previous, Next buttons on same row */}
-            <div className="flex items-center gap-3 mb-4 pt-1">
+            <div className="flex items-center gap-3 mb-4">
               <TemplateSelector
                 selectedTemplate={selectedTemplate}
                 onSelectTemplate={setSelectedTemplate}

@@ -47,7 +47,7 @@ export default function ProfessionalSummaryStep({
             value={resumeData.professional_summary}
             onChange={(e) => onUpdateSummary(e.target.value)}
             rows={8}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             placeholder="Describe your professional background..."
           />
         </div>
@@ -61,7 +61,7 @@ export default function ProfessionalSummaryStep({
       <button
         onClick={onSave}
         disabled={isSaving}
-        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {isSaving ? 'Saving...' : 'Save Changes'}
       </button>
